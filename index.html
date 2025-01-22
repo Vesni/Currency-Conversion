@@ -8,7 +8,8 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1> Rupees To Dollar Conversion (1$ = ₹86.20)</h1>
+  <h1> Rupees To Dollar Conversion (1$ = ₹86.46) UPDATED</h1>
+  
   <select id='Curren'> 
     <option value = 'C'> ₹ to $ </option>
     <option value = 'F'> $ to ₹ </option>
@@ -25,10 +26,10 @@
  let result = document.getElementById('result');
 let ans;
 if(Curren == 'C') {
-    ans =   "$" + (money / 86.20)
+    ans =   "$" + (money / 86.46)
      }
       else{
-        ans =  "₹" + (money * 86.20)
+        ans =  "₹" + (money * 86.46)
       }
       result.innerText = "result:" + ans
     }  
