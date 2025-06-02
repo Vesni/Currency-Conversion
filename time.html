@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>World Clock</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #0f0f0f;
+      color: white;
+      padding: 2rem;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 2rem;
+    }
+    .clock-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .clock {
+      background: #1a1a1a;
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    }
+    .city {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    .time {
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>🕒 World Clock</h1>
+  <div class="clock-grid" id="clockGrid"></div>
+
+  <script>
+    const cities = [
+      { name: "New York", timeZone: "America/New_York" },
+      { name: "London", timeZone: "Europe/London" },
+      { name: "Paris", timeZone: "Europe/Paris" },
+      { name: "Tokyo", timeZone: "Asia/Tokyo" },
+      { name: "Beijing", timeZone: "Asia/Shanghai" },
+      { name: "Sydney", timeZone: "Australia/Sydney" },
+      { name: "Dubai", timeZone: "Asia/Dubai" },
+      { name: "Moscow", timeZone: "Europe/Moscow" },
+      { name: "São Paulo", timeZone: "America/Sao_Paulo" },
+      { name: "Cape Town", timeZone: "Africa/Johannesburg" },
+      { name: "Mumbai", timeZone: "Asia/Kolkata" },
+      { name: "Singapore", timeZone: "Asia/Singapore" },
+      { name: "Los Angeles", timeZone: "America/Los_Angeles" },
+      { name: "Toronto", timeZone: "America/Toronto" },
+      { name: "Berlin", timeZone: "Europe/Berlin" },
+    ];
+
+    function updateClocks() {
+      const grid = document.getElementById('clockGrid');
+      grid.innerHTML = '';
+      cities.forEach(city => {
+        const time = new Intl.DateTimeFormat('en-US', {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          timeZone: city.timeZone,
+          hour12: false
+        }).format(new Date());
+
+        const block = document.createElement('div');
+        block.className = 'clock';
+        block.innerHTML = `
+          <div class="city">${city.name}</div>
+          <div class="time">${time}</div>
+        `;
+        grid.appendChild(block);
+      });
+    }
+
+    setInterval(updateClocks, 1000);
+    updateClocks();
+  </script>
+</body>
+</html>
