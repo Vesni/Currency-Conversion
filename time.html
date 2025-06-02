@@ -15,12 +15,20 @@
     }
     h1 {
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
       font-size: 2rem;
+    }
+    .toggle-container {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    .search-container {
+      text-align: center;
+      margin-bottom: 2rem;
     }
     .clock-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
       gap: 1rem;
     }
     .clock {
@@ -32,56 +40,115 @@
     }
     .city {
       font-weight: bold;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.3rem;
+    }
+    .flag {
+      font-size: 1.5rem;
     }
     .time {
       font-size: 1.2rem;
+      margin-bottom: 0.3rem;
+    }
+    .extra {
+      font-size: 0.85rem;
+      color: #cccccc;
+    }
+    select, input[type="text"] {
+      padding: 0.5rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: none;
+      margin: 0.5rem;
     }
   </style>
 </head>
 <body>
   <h1>🕒 World Clock</h1>
+  <div class="toggle-container">
+    <label for="formatToggle">Time Format:</label>
+    <select id="formatToggle" onchange="updateClocks()">
+      <option value="false">24-hour</option>
+      <option value="true">12-hour</option>
+    </select>
+  </div>
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Search cities..." oninput="updateClocks()">
+  </div>
   <div class="clock-grid" id="clockGrid"></div>
 
   <script>
     const cities = [
-      { name: "New York", timeZone: "America/New_York" },
-      { name: "London", timeZone: "Europe/London" },
-      { name: "Paris", timeZone: "Europe/Paris" },
-      { name: "Tokyo", timeZone: "Asia/Tokyo" },
-      { name: "Beijing", timeZone: "Asia/Shanghai" },
-      { name: "Sydney", timeZone: "Australia/Sydney" },
-      { name: "Dubai", timeZone: "Asia/Dubai" },
-      { name: "Moscow", timeZone: "Europe/Moscow" },
-      { name: "São Paulo", timeZone: "America/Sao_Paulo" },
-      { name: "Cape Town", timeZone: "Africa/Johannesburg" },
-      { name: "Mumbai", timeZone: "Asia/Kolkata" },
-      { name: "Singapore", timeZone: "Asia/Singapore" },
-      { name: "Los Angeles", timeZone: "America/Los_Angeles" },
-      { name: "Toronto", timeZone: "America/Toronto" },
-      { name: "Berlin", timeZone: "Europe/Berlin" },
+      { name: "New York", timeZone: "America/New_York", flag: "🇺🇸" },
+      { name: "London", timeZone: "Europe/London", flag: "🇬🇧" },
+      { name: "Paris", timeZone: "Europe/Paris", flag: "🇫🇷" },
+      { name: "Tokyo", timeZone: "Asia/Tokyo", flag: "🇯🇵" },
+      { name: "Beijing", timeZone: "Asia/Shanghai", flag: "🇨🇳" },
+      { name: "Sydney", timeZone: "Australia/Sydney", flag: "🇦🇺" },
+      { name: "Dubai", timeZone: "Asia/Dubai", flag: "🇦🇪" },
+      { name: "Moscow", timeZone: "Europe/Moscow", flag: "🇷🇺" },
+      { name: "São Paulo", timeZone: "America/Sao_Paulo", flag: "🇧🇷" },
+      { name: "Cape Town", timeZone: "Africa/Johannesburg", flag: "🇿🇦" },
+      { name: "Mumbai", timeZone: "Asia/Kolkata", flag: "🇮🇳" },
+      { name: "Singapore", timeZone: "Asia/Singapore", flag: "🇸🇬" },
+      { name: "Los Angeles", timeZone: "America/Los_Angeles", flag: "🇺🇸" },
+      { name: "Toronto", timeZone: "America/Toronto", flag: "🇨🇦" },
+      { name: "Berlin", timeZone: "Europe/Berlin", flag: "🇩🇪" },
+      { name: "Mexico City", timeZone: "America/Mexico_City", flag: "🇲🇽" },
+      { name: "Cairo", timeZone: "Africa/Cairo", flag: "🇪🇬" },
+      { name: "Seoul", timeZone: "Asia/Seoul", flag: "🇰🇷" },
+      { name: "Rome", timeZone: "Europe/Rome", flag: "🇮🇹" },
+      { name: "Istanbul", timeZone: "Europe/Istanbul", flag: "🇹🇷" },
+      { name: "Bangkok", timeZone: "Asia/Bangkok", flag: "🇹🇭" },
+      { name: "Buenos Aires", timeZone: "America/Argentina/Buenos_Aires", flag: "🇦🇷" },
+      { name: "Jakarta", timeZone: "Asia/Jakarta", flag: "🇮🇩" },
+      { name: "Hanoi", timeZone: "Asia/Bangkok", flag: "🇻🇳" },
+      { name: "Nairobi", timeZone: "Africa/Nairobi", flag: "🇰🇪" }
     ];
 
-    function updateClocks() {
+    async function updateClocks() {
+      const use12Hour = document.getElementById('formatToggle').value === 'true';
+      const search = document.getElementById('searchInput').value.toLowerCase();
       const grid = document.getElementById('clockGrid');
       grid.innerHTML = '';
-      cities.forEach(city => {
+
+      for (const city of cities.filter(c => c.name.toLowerCase().includes(search))) {
+        const now = new Date();
         const time = new Intl.DateTimeFormat('en-US', {
           hour: '2-digit',
           minute: '2-digit',
           second: '2-digit',
           timeZone: city.timeZone,
-          hour12: false
-        }).format(new Date());
+          hour12: use12Hour
+        }).format(now);
+
+        const tzParts = new Intl.DateTimeFormat('en-US', {
+          timeZone: city.timeZone,
+          timeZoneName: 'short'
+        }).formatToParts(now);
+        const zoneAbbr = tzParts.find(p => p.type === 'timeZoneName')?.value || '';
 
         const block = document.createElement('div');
         block.className = 'clock';
         block.innerHTML = `
+          <div class="flag">${city.flag}</div>
           <div class="city">${city.name}</div>
           <div class="time">${time}</div>
+          <div class="extra">${zoneAbbr}</div>
+          <div class="extra" id="sun-${city.name}">Loading...</div>
         `;
         grid.appendChild(block);
-      });
+
+        fetch(`https://api.sunrise-sunset.org/json?lat=0&lng=0&formatted=0&date=today`)
+          .then(res => res.json())
+          .then(data => {
+            const sunrise = new Date(data.results.sunrise).toLocaleTimeString('en-US', { hour12: use12Hour });
+            const sunset = new Date(data.results.sunset).toLocaleTimeString('en-US', { hour12: use12Hour });
+            document.getElementById(`sun-${city.name}`).innerText = `🌅 ${sunrise} | 🌇 ${sunset}`;
+          })
+          .catch(() => {
+            document.getElementById(`sun-${city.name}`).innerText = `Sun data unavailable`;
+          });
+      }
     }
 
     setInterval(updateClocks, 1000);
@@ -89,3 +156,4 @@
   </script>
 </body>
 </html>
+
