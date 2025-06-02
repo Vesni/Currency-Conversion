@@ -1,45 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Currency Conversion</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Global Utility Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #0f0f0f;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 2rem;
+    }
+    header {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+    section {
+      max-width: 700px;
+      margin-bottom: 2rem;
+    }
+    a {
+      display: inline-block;
+      margin: 1rem;
+      padding: 1rem 2rem;
+      background: white;
+      color: #0f0f0f;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    a:hover {
+      background: #cccccc;
+    }
+    canvas {
+      width: 400px;
+      height: 400px;
+    }
+  </style>
 </head>
 <body>
-  <h1> Rupees To Dollar Conversion (1$ = ₹85.56) UPDATED</h1>
-  
-  <select id='Curren'> 
-    <option value = 'C'> ₹ to $ </option>
-    <option value = 'F'> $ to ₹ </option>
-  </select>
-  <input type='text' id='money' placeholder ='Enter The Amount'></input>
-  <button onclick='convert()'>Convert</button>
-  <p id="result"> </p>
-<script>
-  
-  function convert(){
-  let money = document.getElementById('money').value;
-    let Curren = document.getElementById('Curren').value;
-  
- let result = document.getElementById('result');
-let ans;
-if(Curren == 'C') {
-    ans =   "$" + (money / 85.56)
-     }
-      else{
-        ans =  "₹" + (money * 85.56)
-      }
-      result.innerText = "result:" + ans
-    }  
-  
-  
-  
+  <header>🌐 Global Utility Dashboard</header>
+  <section>
+    <p>Welcome to the Global Utility Dashboard. Here you can:</p>
+    <ul style="text-align: left;">
+      <li>💱 Convert currencies using real-time exchange rates.</li>
+      <li>🕒 View the current time in all countries worldwide.</li>
+      <li>🌍 Enjoy an interactive 3D globe experience.</li>
+    </ul>
+  </section>
+
+  <section>
+    <a href="currency.html">Currency Converter</a>
+    <a href="time.html">World Clock</a>
+  </section>
+
+  <section>
+    <canvas id="globe"></canvas>
+  </section>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script>
+    // Basic 3D Globe
+    const canvas = document.getElementById('globe');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+    renderer.setSize(400, 400);
+    const geometry = new THREE.SphereGeometry(1, 32, 32);
+    const material = new THREE.MeshStandardMaterial({ color: 0x00aaff, wireframe: true });
+    const globe = new THREE.Mesh(geometry, material);
+    scene.add(globe);
+    const light = new THREE.DirectionalLight(0xffffff, 1);
+    light.position.set(2, 2, 2);
+    scene.add(light);
+    camera.position.z = 3;
+
+    function animate() {
+      requestAnimationFrame(animate);
+      globe.rotation.y += 0.005;
+      renderer.render(scene, camera);
+    }
+    animate();
   </script>
-  
-      <footer>
-        <p>© 2025 Vesni. All rights reserved.</p>
-    </footer>
 </body>
 </html>
